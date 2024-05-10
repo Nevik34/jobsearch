@@ -40,6 +40,10 @@ export const getNote = /* GraphQL */ `
       name
       description
       image
+      updates {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -60,6 +64,40 @@ export const listNotes = /* GraphQL */ `
         image
         createdAt
         updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getUpdate = /* GraphQL */ `
+  query GetUpdate($id: ID!) {
+    getUpdate(id: $id) {
+      id
+      date
+      notes
+      createdAt
+      updatedAt
+      noteUpdatesId
+      __typename
+    }
+  }
+`;
+export const listUpdates = /* GraphQL */ `
+  query ListUpdates(
+    $filter: ModelUpdateFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listUpdates(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        date
+        notes
+        createdAt
+        updatedAt
+        noteUpdatesId
         __typename
       }
       nextToken

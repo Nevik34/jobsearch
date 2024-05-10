@@ -56,6 +56,10 @@ export const createNote = /* GraphQL */ `
       name
       description
       image
+      updates {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -72,6 +76,10 @@ export const updateNote = /* GraphQL */ `
       name
       description
       image
+      updates {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -88,8 +96,60 @@ export const deleteNote = /* GraphQL */ `
       name
       description
       image
+      updates {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
+      __typename
+    }
+  }
+`;
+export const createUpdate = /* GraphQL */ `
+  mutation CreateUpdate(
+    $input: CreateUpdateInput!
+    $condition: ModelUpdateConditionInput
+  ) {
+    createUpdate(input: $input, condition: $condition) {
+      id
+      date
+      notes
+      createdAt
+      updatedAt
+      noteUpdatesId
+      __typename
+    }
+  }
+`;
+export const updateUpdate = /* GraphQL */ `
+  mutation UpdateUpdate(
+    $input: UpdateUpdateInput!
+    $condition: ModelUpdateConditionInput
+  ) {
+    updateUpdate(input: $input, condition: $condition) {
+      id
+      date
+      notes
+      createdAt
+      updatedAt
+      noteUpdatesId
+      __typename
+    }
+  }
+`;
+export const deleteUpdate = /* GraphQL */ `
+  mutation DeleteUpdate(
+    $input: DeleteUpdateInput!
+    $condition: ModelUpdateConditionInput
+  ) {
+    deleteUpdate(input: $input, condition: $condition) {
+      id
+      date
+      notes
+      createdAt
+      updatedAt
+      noteUpdatesId
       __typename
     }
   }

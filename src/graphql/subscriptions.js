@@ -44,6 +44,10 @@ export const onCreateNote = /* GraphQL */ `
       name
       description
       image
+      updates {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -57,6 +61,10 @@ export const onUpdateNote = /* GraphQL */ `
       name
       description
       image
+      updates {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -70,8 +78,51 @@ export const onDeleteNote = /* GraphQL */ `
       name
       description
       image
+      updates {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
+      __typename
+    }
+  }
+`;
+export const onCreateUpdate = /* GraphQL */ `
+  subscription OnCreateUpdate($filter: ModelSubscriptionUpdateFilterInput) {
+    onCreateUpdate(filter: $filter) {
+      id
+      date
+      notes
+      createdAt
+      updatedAt
+      noteUpdatesId
+      __typename
+    }
+  }
+`;
+export const onUpdateUpdate = /* GraphQL */ `
+  subscription OnUpdateUpdate($filter: ModelSubscriptionUpdateFilterInput) {
+    onUpdateUpdate(filter: $filter) {
+      id
+      date
+      notes
+      createdAt
+      updatedAt
+      noteUpdatesId
+      __typename
+    }
+  }
+`;
+export const onDeleteUpdate = /* GraphQL */ `
+  subscription OnDeleteUpdate($filter: ModelSubscriptionUpdateFilterInput) {
+    onDeleteUpdate(filter: $filter) {
+      id
+      date
+      notes
+      createdAt
+      updatedAt
+      noteUpdatesId
       __typename
     }
   }
