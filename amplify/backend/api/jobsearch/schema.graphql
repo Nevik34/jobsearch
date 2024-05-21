@@ -31,7 +31,7 @@ type Listing @model {
 
 type Recruiter @model {
   id: ID!
-  listingId: String!
+  listing: Listing! @hasMany
   first: String!
   last: String!
   email: String!

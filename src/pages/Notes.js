@@ -14,11 +14,11 @@ import {
   TextField,
   View,
 } from '@aws-amplify/ui-react';
-import { listNotes } from './graphql/queries';
+import { listNotes } from '../graphql/queries';
 import {
   createNote as createNoteMutation,
   deleteNote as deleteNoteMutation,
-} from './graphql/mutations';
+} from '../graphql/mutations';
 import { generateClient } from 'aws-amplify/api';
 import { Link } from 'react-router-dom';
 

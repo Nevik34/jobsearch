@@ -1,42 +1,6 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const onCreateTodo = /* GraphQL */ `
-  subscription OnCreateTodo($filter: ModelSubscriptionTodoFilterInput) {
-    onCreateTodo(filter: $filter) {
-      id
-      name
-      description
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const onUpdateTodo = /* GraphQL */ `
-  subscription OnUpdateTodo($filter: ModelSubscriptionTodoFilterInput) {
-    onUpdateTodo(filter: $filter) {
-      id
-      name
-      description
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const onDeleteTodo = /* GraphQL */ `
-  subscription OnDeleteTodo($filter: ModelSubscriptionTodoFilterInput) {
-    onDeleteTodo(filter: $filter) {
-      id
-      name
-      description
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
 export const onCreateNote = /* GraphQL */ `
   subscription OnCreateNote($filter: ModelSubscriptionNoteFilterInput) {
     onCreateNote(filter: $filter) {
@@ -44,10 +8,6 @@ export const onCreateNote = /* GraphQL */ `
       name
       description
       image
-      updates {
-        nextToken
-        __typename
-      }
       createdAt
       updatedAt
       __typename
@@ -61,10 +21,6 @@ export const onUpdateNote = /* GraphQL */ `
       name
       description
       image
-      updates {
-        nextToken
-        __typename
-      }
       createdAt
       updatedAt
       __typename
@@ -78,10 +34,6 @@ export const onDeleteNote = /* GraphQL */ `
       name
       description
       image
-      updates {
-        nextToken
-        __typename
-      }
       createdAt
       updatedAt
       __typename
@@ -92,11 +44,11 @@ export const onCreateUpdate = /* GraphQL */ `
   subscription OnCreateUpdate($filter: ModelSubscriptionUpdateFilterInput) {
     onCreateUpdate(filter: $filter) {
       id
+      noteId
       date
       notes
       createdAt
       updatedAt
-      noteUpdatesId
       __typename
     }
   }
@@ -105,11 +57,11 @@ export const onUpdateUpdate = /* GraphQL */ `
   subscription OnUpdateUpdate($filter: ModelSubscriptionUpdateFilterInput) {
     onUpdateUpdate(filter: $filter) {
       id
+      noteId
       date
       notes
       createdAt
       updatedAt
-      noteUpdatesId
       __typename
     }
   }
@@ -118,11 +70,158 @@ export const onDeleteUpdate = /* GraphQL */ `
   subscription OnDeleteUpdate($filter: ModelSubscriptionUpdateFilterInput) {
     onDeleteUpdate(filter: $filter) {
       id
+      noteId
       date
       notes
       createdAt
       updatedAt
-      noteUpdatesId
+      __typename
+    }
+  }
+`;
+export const onCreateListing = /* GraphQL */ `
+  subscription OnCreateListing($filter: ModelSubscriptionListingFilterInput) {
+    onCreateListing(filter: $filter) {
+      id
+      company
+      title
+      source
+      link
+      recruiter {
+        id
+        listingId
+        first
+        last
+        email
+        company
+        createdAt
+        updatedAt
+        __typename
+      }
+      status
+      notes
+      updates {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      listingRecruiterId
+      __typename
+    }
+  }
+`;
+export const onUpdateListing = /* GraphQL */ `
+  subscription OnUpdateListing($filter: ModelSubscriptionListingFilterInput) {
+    onUpdateListing(filter: $filter) {
+      id
+      company
+      title
+      source
+      link
+      recruiter {
+        id
+        listingId
+        first
+        last
+        email
+        company
+        createdAt
+        updatedAt
+        __typename
+      }
+      status
+      notes
+      updates {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      listingRecruiterId
+      __typename
+    }
+  }
+`;
+export const onDeleteListing = /* GraphQL */ `
+  subscription OnDeleteListing($filter: ModelSubscriptionListingFilterInput) {
+    onDeleteListing(filter: $filter) {
+      id
+      company
+      title
+      source
+      link
+      recruiter {
+        id
+        listingId
+        first
+        last
+        email
+        company
+        createdAt
+        updatedAt
+        __typename
+      }
+      status
+      notes
+      updates {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      listingRecruiterId
+      __typename
+    }
+  }
+`;
+export const onCreateRecruiter = /* GraphQL */ `
+  subscription OnCreateRecruiter(
+    $filter: ModelSubscriptionRecruiterFilterInput
+  ) {
+    onCreateRecruiter(filter: $filter) {
+      id
+      listingId
+      first
+      last
+      email
+      company
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateRecruiter = /* GraphQL */ `
+  subscription OnUpdateRecruiter(
+    $filter: ModelSubscriptionRecruiterFilterInput
+  ) {
+    onUpdateRecruiter(filter: $filter) {
+      id
+      listingId
+      first
+      last
+      email
+      company
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteRecruiter = /* GraphQL */ `
+  subscription OnDeleteRecruiter(
+    $filter: ModelSubscriptionRecruiterFilterInput
+  ) {
+    onDeleteRecruiter(filter: $filter) {
+      id
+      listingId
+      first
+      last
+      email
+      company
+      createdAt
+      updatedAt
       __typename
     }
   }

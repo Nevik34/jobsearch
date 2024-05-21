@@ -12,12 +12,12 @@ import {
   withAuthenticator,
 } from '@aws-amplify/ui-react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getNote } from './graphql/queries';
+import { getNote } from '../graphql/queries';
 import {
   //   createNote as createNoteMutation,
   deleteNote as deleteNoteMutation,
   updateNote as updateNoteMutation,
-} from './graphql/mutations';
+} from '../graphql/mutations';
 import { generateClient } from 'aws-amplify/api';
 
 function Note(props) {

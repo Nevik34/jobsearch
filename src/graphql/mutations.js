@@ -1,51 +1,6 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const createTodo = /* GraphQL */ `
-  mutation CreateTodo(
-    $input: CreateTodoInput!
-    $condition: ModelTodoConditionInput
-  ) {
-    createTodo(input: $input, condition: $condition) {
-      id
-      name
-      description
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const updateTodo = /* GraphQL */ `
-  mutation UpdateTodo(
-    $input: UpdateTodoInput!
-    $condition: ModelTodoConditionInput
-  ) {
-    updateTodo(input: $input, condition: $condition) {
-      id
-      name
-      description
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const deleteTodo = /* GraphQL */ `
-  mutation DeleteTodo(
-    $input: DeleteTodoInput!
-    $condition: ModelTodoConditionInput
-  ) {
-    deleteTodo(input: $input, condition: $condition) {
-      id
-      name
-      description
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
 export const createNote = /* GraphQL */ `
   mutation CreateNote(
     $input: CreateNoteInput!
@@ -56,10 +11,6 @@ export const createNote = /* GraphQL */ `
       name
       description
       image
-      updates {
-        nextToken
-        __typename
-      }
       createdAt
       updatedAt
       __typename
@@ -76,10 +27,6 @@ export const updateNote = /* GraphQL */ `
       name
       description
       image
-      updates {
-        nextToken
-        __typename
-      }
       createdAt
       updatedAt
       __typename
@@ -96,10 +43,6 @@ export const deleteNote = /* GraphQL */ `
       name
       description
       image
-      updates {
-        nextToken
-        __typename
-      }
       createdAt
       updatedAt
       __typename
@@ -113,11 +56,11 @@ export const createUpdate = /* GraphQL */ `
   ) {
     createUpdate(input: $input, condition: $condition) {
       id
+      noteId
       date
       notes
       createdAt
       updatedAt
-      noteUpdatesId
       __typename
     }
   }
@@ -129,11 +72,11 @@ export const updateUpdate = /* GraphQL */ `
   ) {
     updateUpdate(input: $input, condition: $condition) {
       id
+      noteId
       date
       notes
       createdAt
       updatedAt
-      noteUpdatesId
       __typename
     }
   }
@@ -145,11 +88,170 @@ export const deleteUpdate = /* GraphQL */ `
   ) {
     deleteUpdate(input: $input, condition: $condition) {
       id
+      noteId
       date
       notes
       createdAt
       updatedAt
-      noteUpdatesId
+      __typename
+    }
+  }
+`;
+export const createListing = /* GraphQL */ `
+  mutation CreateListing(
+    $input: CreateListingInput!
+    $condition: ModelListingConditionInput
+  ) {
+    createListing(input: $input, condition: $condition) {
+      id
+      company
+      title
+      source
+      link
+      recruiter {
+        id
+        listingId
+        first
+        last
+        email
+        company
+        createdAt
+        updatedAt
+        __typename
+      }
+      status
+      notes
+      updates {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      listingRecruiterId
+      __typename
+    }
+  }
+`;
+export const updateListing = /* GraphQL */ `
+  mutation UpdateListing(
+    $input: UpdateListingInput!
+    $condition: ModelListingConditionInput
+  ) {
+    updateListing(input: $input, condition: $condition) {
+      id
+      company
+      title
+      source
+      link
+      recruiter {
+        id
+        listingId
+        first
+        last
+        email
+        company
+        createdAt
+        updatedAt
+        __typename
+      }
+      status
+      notes
+      updates {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      listingRecruiterId
+      __typename
+    }
+  }
+`;
+export const deleteListing = /* GraphQL */ `
+  mutation DeleteListing(
+    $input: DeleteListingInput!
+    $condition: ModelListingConditionInput
+  ) {
+    deleteListing(input: $input, condition: $condition) {
+      id
+      company
+      title
+      source
+      link
+      recruiter {
+        id
+        listingId
+        first
+        last
+        email
+        company
+        createdAt
+        updatedAt
+        __typename
+      }
+      status
+      notes
+      updates {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      listingRecruiterId
+      __typename
+    }
+  }
+`;
+export const createRecruiter = /* GraphQL */ `
+  mutation CreateRecruiter(
+    $input: CreateRecruiterInput!
+    $condition: ModelRecruiterConditionInput
+  ) {
+    createRecruiter(input: $input, condition: $condition) {
+      id
+      listingId
+      first
+      last
+      email
+      company
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateRecruiter = /* GraphQL */ `
+  mutation UpdateRecruiter(
+    $input: UpdateRecruiterInput!
+    $condition: ModelRecruiterConditionInput
+  ) {
+    updateRecruiter(input: $input, condition: $condition) {
+      id
+      listingId
+      first
+      last
+      email
+      company
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteRecruiter = /* GraphQL */ `
+  mutation DeleteRecruiter(
+    $input: DeleteRecruiterInput!
+    $condition: ModelRecruiterConditionInput
+  ) {
+    deleteRecruiter(input: $input, condition: $condition) {
+      id
+      listingId
+      first
+      last
+      email
+      company
+      createdAt
+      updatedAt
       __typename
     }
   }

@@ -7,10 +7,15 @@ import {
   Flex,
   Heading,
   useAuthenticator,
+  View,
   withAuthenticator,
 } from '@aws-amplify/ui-react';
-import Notes from './Notes';
-import Note from './Note';
+import Notes from './pages/Notes';
+import Note from './pages/Note';
+import Listings from './pages/Listings';
+import CreateListing from './pages/CreateListing';
+import EditListing from './pages/EditListing';
+import Navbar from './components/navbar';
 
 import {
   BrowserRouter as Router,
@@ -23,14 +28,6 @@ function Home() {
   return <Heading level={2}>Home</Heading>;
 }
 
-// function About() {
-//   return <Heading level={2}>Notes</Heading>;
-// }
-
-function Users() {
-  return <Heading level={2}>Users</Heading>;
-}
-
 const App = () => {
   const { user, route, signOut } = useAuthenticator((context) => [
     context.user,
@@ -38,27 +35,17 @@ const App = () => {
   console.log('user: ', user);
   console.log('route: ', route);
   return (
-    <Router>
-      <Flex>
-        <ReactRouterLink to="/" component={Link}>
-          Home
-        </ReactRouterLink>
-        <ReactRouterLink to="/notes" component={Link}>
-          Notes
-        </ReactRouterLink>
-        <ReactRouterLink to="/users" component={Link}>
-          Users
-        </ReactRouterLink>
-        <Button onClick={signOut}>Sign Out</Button>
-      </Flex>
-
+    <View className="App">
+      <Navbar signOut={signOut} />
       <Routes>
+        <Route path="/" element={<Home />} />
         <Route path="/notes" element={<Notes />} />
         <Route path="/note/:noteId" element={<Note />} />
-        <Route path="/users" element={<Users />} />
-        <Route path="/" element={<Home />} />
+        <Route path="/listings" element={<Listings />} />
+        <Route path="/listing/create" element={<CreateListing />} />
+        <Route path="/listing/:listingId" element={<EditListing />} />
       </Routes>
-    </Router>
+    </View>
   );
 };
 
