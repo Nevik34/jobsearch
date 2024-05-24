@@ -240,7 +240,7 @@ export default function ListingUpdateForm(props) {
   };
   const [listingRecord, setListingRecord] = React.useState(listingModelProp);
   const [linkedUpdates, setLinkedUpdates] = React.useState([]);
-  const canUnlinkUpdates = false;
+  const canUnlinkUpdates = true;
   React.useEffect(() => {
     const queryData = async () => {
       const record = idProp
@@ -285,8 +285,8 @@ export default function ListingUpdateForm(props) {
       : getIDValue.updates?.(updates)
   );
   const getDisplayValue = {
-    recruiter: (r) => `${r?.listingId ? r?.listingId + " - " : ""}${r?.id}`,
-    updates: (r) => `${r?.noteId ? r?.noteId + " - " : ""}${r?.id}`,
+    recruiter: (r) => `${r?.first ? r?.first + " - " : ""}${r?.id}`,
+    updates: (r) => `${r?.notes ? r?.notes + " - " : ""}${r?.id}`,
   };
   const validations = {
     company: [{ type: "Required" }],
@@ -323,7 +323,7 @@ export default function ListingUpdateForm(props) {
       const variables = {
         limit: autocompleteLength * 5,
         filter: {
-          or: [{ listingId: { contains: value } }, { id: { contains: value } }],
+          or: [{ first: { contains: value } }, { id: { contains: value } }],
         },
       };
       if (newNext) {
@@ -352,7 +352,7 @@ export default function ListingUpdateForm(props) {
       const variables = {
         limit: autocompleteLength * 5,
         filter: {
-          or: [{ noteId: { contains: value } }, { id: { contains: value } }],
+          or: [{ notes: { contains: value } }, { id: { contains: value } }],
         },
       };
       if (newNext) {
@@ -453,7 +453,7 @@ export default function ListingUpdateForm(props) {
           updatesToUnLink.forEach((original) => {
             if (!canUnlinkUpdates) {
               throw Error(
-                `Update ${original.id} cannot be unlinked from Listing because id is a required field.`
+                `Update ${original.id} cannot be unlinked from Listing because undefined is a required field.`
               );
             }
             promises.push(
@@ -462,7 +462,6 @@ export default function ListingUpdateForm(props) {
                 variables: {
                   input: {
                     id: original.id,
-                    id: null,
                   },
                 },
               })
@@ -475,7 +474,6 @@ export default function ListingUpdateForm(props) {
                 variables: {
                   input: {
                     id: original.id,
-                    id: listingRecord.id,
                   },
                 },
               })
@@ -486,7 +484,7 @@ export default function ListingUpdateForm(props) {
             title: modelFields.title,
             source: modelFields.source ?? null,
             link: modelFields.link ?? null,
-            listingRecruiterId: modelFields?.recruiter?.id ?? null,
+            recruiterId: modelFields?.recruiter?.id ?? null,
             status: modelFields.status ?? null,
             notes: modelFields.notes ?? null,
           };
@@ -833,12 +831,10 @@ export default function ListingUpdateForm(props) {
           isReadOnly={false}
           placeholder="Search Update"
           value={currentUpdatesDisplayValue}
-          options={updatesRecords
-            .filter((r) => !updatesIdSet.has(getIDValue.updates?.(r)))
-            .map((r) => ({
-              id: getIDValue.updates?.(r),
-              label: getDisplayValue.updates?.(r),
-            }))}
+          options={updatesRecords.map((r) => ({
+            id: getIDValue.updates?.(r),
+            label: getDisplayValue.updates?.(r),
+          }))}
           isLoading={updatesLoading}
           onSelect={({ id, label }) => {
             setCurrentUpdatesValue(

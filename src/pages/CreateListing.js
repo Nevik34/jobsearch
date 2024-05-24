@@ -28,7 +28,7 @@ export default function CreateListing() {
     }));
   };
 
-  async function createNote(event) {
+  async function createListing(event) {
     try {
       event.preventDefault();
       const form = new FormData(event.target);
@@ -62,7 +62,7 @@ export default function CreateListing() {
         as="form"
         margin="3rem 0"
         style={{ textAlign: 'left' }}
-        onSubmit={createNote}
+        onSubmit={createListing}
       >
         <Flex direction="column" justifyContent="center">
           <TextField

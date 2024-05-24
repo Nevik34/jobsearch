@@ -39,9 +39,21 @@ export const getUpdate = /* GraphQL */ `
   query GetUpdate($id: ID!) {
     getUpdate(id: $id) {
       id
-      noteId
-      date
+      listingId
       notes
+      listing {
+        id
+        company
+        title
+        source
+        link
+        recruiterId
+        status
+        notes
+        createdAt
+        updatedAt
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -57,8 +69,7 @@ export const listUpdates = /* GraphQL */ `
     listUpdates(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        noteId
-        date
+        listingId
         notes
         createdAt
         updatedAt
@@ -77,9 +88,9 @@ export const getListing = /* GraphQL */ `
       title
       source
       link
+      recruiterId
       recruiter {
         id
-        listingId
         first
         last
         email
@@ -96,7 +107,6 @@ export const getListing = /* GraphQL */ `
       }
       createdAt
       updatedAt
-      listingRecruiterId
       __typename
     }
   }
@@ -114,11 +124,11 @@ export const listListings = /* GraphQL */ `
         title
         source
         link
+        recruiterId
         status
         notes
         createdAt
         updatedAt
-        listingRecruiterId
         __typename
       }
       nextToken
@@ -130,7 +140,10 @@ export const getRecruiter = /* GraphQL */ `
   query GetRecruiter($id: ID!) {
     getRecruiter(id: $id) {
       id
-      listingId
+      referrals {
+        nextToken
+        __typename
+      }
       first
       last
       email
@@ -150,11 +163,71 @@ export const listRecruiters = /* GraphQL */ `
     listRecruiters(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        listingId
         first
         last
         email
         company
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const updatesByListingId = /* GraphQL */ `
+  query UpdatesByListingId(
+    $listingId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelUpdateFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    updatesByListingId(
+      listingId: $listingId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        listingId
+        notes
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const listingsByRecruiterId = /* GraphQL */ `
+  query ListingsByRecruiterId(
+    $recruiterId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelListingFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listingsByRecruiterId(
+      recruiterId: $recruiterId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        company
+        title
+        source
+        link
+        recruiterId
+        status
+        notes
         createdAt
         updatedAt
         __typename

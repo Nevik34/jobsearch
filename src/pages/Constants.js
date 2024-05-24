@@ -13,4 +13,5 @@ export const SOURCES = {
   RECRUITER: 'Recruiter',
   REDBALLOON: 'Red Balloon',
   ZIPRECRUITER: 'Zip Recruiter',
+  COMPANYSITE: 'Company Site',
 };

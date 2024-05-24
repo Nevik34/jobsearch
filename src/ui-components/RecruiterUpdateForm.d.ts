@@ -5,7 +5,7 @@
  **************************************************************************/
 
 import * as React from "react";
-import { GridProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { AutocompleteProps, GridProps, TextFieldProps } from "@aws-amplify/ui-react";
 export declare type EscapeHatchProps = {
     [elementHierarchy: string]: Record<string, unknown>;
 } | null;
@@ -22,14 +22,14 @@ export declare type ValidationResponse = {
 };
 export declare type ValidationFunction<T> = (value: T, validationResponse: ValidationResponse) => ValidationResponse | Promise<ValidationResponse>;
 export declare type RecruiterUpdateFormInputValues = {
-    listingId?: string;
+    referrals?: any[];
     first?: string;
     last?: string;
     email?: string;
     company?: string;
 };
 export declare type RecruiterUpdateFormValidationValues = {
-    listingId?: ValidationFunction<string>;
+    referrals?: ValidationFunction<any>;
     first?: ValidationFunction<string>;
     last?: ValidationFunction<string>;
     email?: ValidationFunction<string>;
@@ -38,7 +38,7 @@ export declare type RecruiterUpdateFormValidationValues = {
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type RecruiterUpdateFormOverridesProps = {
     RecruiterUpdateFormGrid?: PrimitiveOverrideProps<GridProps>;
-    listingId?: PrimitiveOverrideProps<TextFieldProps>;
+    referrals?: PrimitiveOverrideProps<AutocompleteProps>;
     first?: PrimitiveOverrideProps<TextFieldProps>;
     last?: PrimitiveOverrideProps<TextFieldProps>;
     email?: PrimitiveOverrideProps<TextFieldProps>;

@@ -9,6 +9,7 @@ export default function Navbar(props) {
       <ul>
         <CustomLink to="/notes">Notes</CustomLink>
         <CustomLink to="/listings">Listings</CustomLink>
+        <CustomLink to="/recruiters">Recruiters</CustomLink>
         <button className="signOut" onClick={props.signOut}>
           Sign Out
         </button>

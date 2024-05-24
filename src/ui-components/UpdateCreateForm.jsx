@@ -6,11 +6,179 @@
 
 /* eslint-disable */
 import * as React from "react";
-import { Button, Flex, Grid, TextField } from "@aws-amplify/ui-react";
+import {
+  Autocomplete,
+  Badge,
+  Button,
+  Divider,
+  Flex,
+  Grid,
+  Icon,
+  ScrollView,
+  Text,
+  TextField,
+  useTheme,
+} from "@aws-amplify/ui-react";
 import { fetchByPath, getOverrideProps, validateField } from "./utils";
 import { generateClient } from "aws-amplify/api";
+import { listListings } from "../graphql/queries";
 import { createUpdate } from "../graphql/mutations";
 const client = generateClient();
+function ArrayField({
+  items = [],
+  onChange,
+  label,
+  inputFieldRef,
+  children,
+  hasError,
+  setFieldValue,
+  currentFieldValue,
+  defaultFieldValue,
+  lengthLimit,
+  getBadgeText,
+  runValidationTasks,
+  errorMessage,
+}) {
+  const labelElement = <Text>{label}</Text>;
+  const {
+    tokens: {
+      components: {
+        fieldmessages: { error: errorStyles },
+      },
+    },
+  } = useTheme();
+  const [selectedBadgeIndex, setSelectedBadgeIndex] = React.useState();
+  const [isEditing, setIsEditing] = React.useState();
+  React.useEffect(() => {
+    if (isEditing) {
+      inputFieldRef?.current?.focus();
+    }
+  }, [isEditing]);
+  const removeItem = async (removeIndex) => {
+    const newItems = items.filter((value, index) => index !== removeIndex);
+    await onChange(newItems);
+    setSelectedBadgeIndex(undefined);
+  };
+  const addItem = async () => {
+    const { hasError } = runValidationTasks();
+    if (
+      currentFieldValue !== undefined &&
+      currentFieldValue !== null &&
+      currentFieldValue !== "" &&
+      !hasError
+    ) {
+      const newItems = [...items];
+      if (selectedBadgeIndex !== undefined) {
+        newItems[selectedBadgeIndex] = currentFieldValue;
+        setSelectedBadgeIndex(undefined);
+      } else {
+        newItems.push(currentFieldValue);
+      }
+      await onChange(newItems);
+      setIsEditing(false);
+    }
+  };
+  const arraySection = (
+    <React.Fragment>
+      {!!items?.length && (
+        <ScrollView height="inherit" width="inherit" maxHeight={"7rem"}>
+          {items.map((value, index) => {
+            return (
+              <Badge
+                key={index}
+                style={{
+                  cursor: "pointer",
+                  alignItems: "center",
+                  marginRight: 3,
+                  marginTop: 3,
+                  backgroundColor:
+                    index === selectedBadgeIndex ? "#B8CEF9" : "",
+                }}
+                onClick={() => {
+                  setSelectedBadgeIndex(index);
+                  setFieldValue(items[index]);
+                  setIsEditing(true);
+                }}
+              >
+                {getBadgeText ? getBadgeText(value) : value.toString()}
+                <Icon
+                  style={{
+                    cursor: "pointer",
+                    paddingLeft: 3,
+                    width: 20,
+                    height: 20,
+                  }}
+                  viewBox={{ width: 20, height: 20 }}
+                  paths={[
+                    {
+                      d: "M10 10l5.09-5.09L10 10l5.09 5.09L10 10zm0 0L4.91 4.91 10 10l-5.09 5.09L10 10z",
+                      stroke: "black",
+                    },
+                  ]}
+                  ariaLabel="button"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    removeItem(index);
+                  }}
+                />
+              </Badge>
+            );
+          })}
+        </ScrollView>
+      )}
+      <Divider orientation="horizontal" marginTop={5} />
+    </React.Fragment>
+  );
+  if (lengthLimit !== undefined && items.length >= lengthLimit && !isEditing) {
+    return (
+      <React.Fragment>
+        {labelElement}
+        {arraySection}
+      </React.Fragment>
+    );
+  }
+  return (
+    <React.Fragment>
+      {labelElement}
+      {isEditing && children}
+      {!isEditing ? (
+        <>
+          <Button
+            onClick={() => {
+              setIsEditing(true);
+            }}
+          >
+            Add item
+          </Button>
+          {errorMessage && hasError && (
+            <Text color={errorStyles.color} fontSize={errorStyles.fontSize}>
+              {errorMessage}
+            </Text>
+          )}
+        </>
+      ) : (
+        <Flex justifyContent="flex-end">
+          {(currentFieldValue || isEditing) && (
+            <Button
+              children="Cancel"
+              type="button"
+              size="small"
+              onClick={() => {
+                setFieldValue(defaultFieldValue);
+                setIsEditing(false);
+                setSelectedBadgeIndex(undefined);
+              }}
+            ></Button>
+          )}
+          <Button size="small" variation="link" onClick={addItem}>
+            {selectedBadgeIndex !== undefined ? "Save" : "Add"}
+          </Button>
+        </Flex>
+      )}
+      {arraySection}
+    </React.Fragment>
+  );
+}
 export default function UpdateCreateForm(props) {
   const {
     clearOnSuccess = true,
@@ -23,24 +191,41 @@ export default function UpdateCreateForm(props) {
     ...rest
   } = props;
   const initialValues = {
-    noteId: "",
-    date: "",
     notes: "",
+    listing: undefined,
   };
-  const [noteId, setNoteId] = React.useState(initialValues.noteId);
-  const [date, setDate] = React.useState(initialValues.date);
   const [notes, setNotes] = React.useState(initialValues.notes);
+  const [listing, setListing] = React.useState(initialValues.listing);
+  const [listingLoading, setListingLoading] = React.useState(false);
+  const [listingRecords, setListingRecords] = React.useState([]);
+  const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
-    setNoteId(initialValues.noteId);
-    setDate(initialValues.date);
     setNotes(initialValues.notes);
+    setListing(initialValues.listing);
+    setCurrentListingValue(undefined);
+    setCurrentListingDisplayValue("");
     setErrors({});
   };
+  const [currentListingDisplayValue, setCurrentListingDisplayValue] =
+    React.useState("");
+  const [currentListingValue, setCurrentListingValue] =
+    React.useState(undefined);
+  const listingRef = React.createRef();
+  const getIDValue = {
+    listing: (r) => JSON.stringify({ id: r?.id }),
+  };
+  const listingIdSet = new Set(
+    Array.isArray(listing)
+      ? listing.map((r) => getIDValue.listing?.(r))
+      : getIDValue.listing?.(listing)
+  );
+  const getDisplayValue = {
+    listing: (r) => `${r?.company ? r?.company + " - " : ""}${r?.id}`,
+  };
   const validations = {
-    noteId: [{ type: "Required" }],
-    date: [{ type: "Required" }],
-    notes: [],
+    notes: [{ type: "Required" }],
+    listing: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -59,6 +244,38 @@ export default function UpdateCreateForm(props) {
     setErrors((errors) => ({ ...errors, [fieldName]: validationResponse }));
     return validationResponse;
   };
+  const fetchListingRecords = async (value) => {
+    setListingLoading(true);
+    const newOptions = [];
+    let newNext = "";
+    while (newOptions.length < autocompleteLength && newNext != null) {
+      const variables = {
+        limit: autocompleteLength * 5,
+        filter: {
+          or: [{ company: { contains: value } }, { id: { contains: value } }],
+        },
+      };
+      if (newNext) {
+        variables["nextToken"] = newNext;
+      }
+      const result = (
+        await client.graphql({
+          query: listListings.replaceAll("__typename", ""),
+          variables,
+        })
+      )?.data?.listListings?.items;
+      var loaded = result.filter(
+        (item) => !listingIdSet.has(getIDValue.listing?.(item))
+      );
+      newOptions.push(...loaded);
+      newNext = result.nextToken;
+    }
+    setListingRecords(newOptions.slice(0, autocompleteLength));
+    setListingLoading(false);
+  };
+  React.useEffect(() => {
+    fetchListingRecords("");
+  }, []);
   return (
     <Grid
       as="form"
@@ -68,22 +285,29 @@ export default function UpdateCreateForm(props) {
       onSubmit={async (event) => {
         event.preventDefault();
         let modelFields = {
-          noteId,
-          date,
           notes,
+          listing,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
             if (Array.isArray(modelFields[fieldName])) {
               promises.push(
                 ...modelFields[fieldName].map((item) =>
-                  runValidationTasks(fieldName, item)
+                  runValidationTasks(
+                    fieldName,
+                    item,
+                    getDisplayValue[fieldName]
+                  )
                 )
               );
               return promises;
             }
             promises.push(
-              runValidationTasks(fieldName, modelFields[fieldName])
+              runValidationTasks(
+                fieldName,
+                modelFields[fieldName],
+                getDisplayValue[fieldName]
+              )
             );
             return promises;
           }, [])
@@ -100,11 +324,15 @@ export default function UpdateCreateForm(props) {
               modelFields[key] = null;
             }
           });
+          const modelFieldsToSave = {
+            notes: modelFields.notes,
+            listingId: modelFields?.listing?.id,
+          };
           await client.graphql({
             query: createUpdate.replaceAll("__typename", ""),
             variables: {
               input: {
-                ...modelFields,
+                ...modelFieldsToSave,
               },
             },
           });
@@ -125,69 +353,16 @@ export default function UpdateCreateForm(props) {
       {...rest}
     >
       <TextField
-        label="Note id"
-        isRequired={true}
-        isReadOnly={false}
-        value={noteId}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              noteId: value,
-              date,
-              notes,
-            };
-            const result = onChange(modelFields);
-            value = result?.noteId ?? value;
-          }
-          if (errors.noteId?.hasError) {
-            runValidationTasks("noteId", value);
-          }
-          setNoteId(value);
-        }}
-        onBlur={() => runValidationTasks("noteId", noteId)}
-        errorMessage={errors.noteId?.errorMessage}
-        hasError={errors.noteId?.hasError}
-        {...getOverrideProps(overrides, "noteId")}
-      ></TextField>
-      <TextField
-        label="Date"
-        isRequired={true}
-        isReadOnly={false}
-        value={date}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              noteId,
-              date: value,
-              notes,
-            };
-            const result = onChange(modelFields);
-            value = result?.date ?? value;
-          }
-          if (errors.date?.hasError) {
-            runValidationTasks("date", value);
-          }
-          setDate(value);
-        }}
-        onBlur={() => runValidationTasks("date", date)}
-        errorMessage={errors.date?.errorMessage}
-        hasError={errors.date?.hasError}
-        {...getOverrideProps(overrides, "date")}
-      ></TextField>
-      <TextField
         label="Notes"
-        isRequired={false}
+        isRequired={true}
         isReadOnly={false}
         value={notes}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              noteId,
-              date,
               notes: value,
+              listing,
             };
             const result = onChange(modelFields);
             value = result?.notes ?? value;
@@ -202,6 +377,86 @@ export default function UpdateCreateForm(props) {
         hasError={errors.notes?.hasError}
         {...getOverrideProps(overrides, "notes")}
       ></TextField>
+      <ArrayField
+        lengthLimit={1}
+        onChange={async (items) => {
+          let value = items[0];
+          if (onChange) {
+            const modelFields = {
+              notes,
+              listing: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.listing ?? value;
+          }
+          setListing(value);
+          setCurrentListingValue(undefined);
+          setCurrentListingDisplayValue("");
+        }}
+        currentFieldValue={currentListingValue}
+        label={"Listing"}
+        items={listing ? [listing] : []}
+        hasError={errors?.listing?.hasError}
+        runValidationTasks={async () =>
+          await runValidationTasks("listing", currentListingValue)
+        }
+        errorMessage={errors?.listing?.errorMessage}
+        getBadgeText={getDisplayValue.listing}
+        setFieldValue={(model) => {
+          setCurrentListingDisplayValue(
+            model ? getDisplayValue.listing(model) : ""
+          );
+          setCurrentListingValue(model);
+        }}
+        inputFieldRef={listingRef}
+        defaultFieldValue={""}
+      >
+        <Autocomplete
+          label="Listing"
+          isRequired={false}
+          isReadOnly={false}
+          placeholder="Search Listing"
+          value={currentListingDisplayValue}
+          options={listingRecords
+            .filter((r) => !listingIdSet.has(getIDValue.listing?.(r)))
+            .map((r) => ({
+              id: getIDValue.listing?.(r),
+              label: getDisplayValue.listing?.(r),
+            }))}
+          isLoading={listingLoading}
+          onSelect={({ id, label }) => {
+            setCurrentListingValue(
+              listingRecords.find((r) =>
+                Object.entries(JSON.parse(id)).every(
+                  ([key, value]) => r[key] === value
+                )
+              )
+            );
+            setCurrentListingDisplayValue(label);
+            runValidationTasks("listing", label);
+          }}
+          onClear={() => {
+            setCurrentListingDisplayValue("");
+          }}
+          onChange={(e) => {
+            let { value } = e.target;
+            fetchListingRecords(value);
+            if (errors.listing?.hasError) {
+              runValidationTasks("listing", value);
+            }
+            setCurrentListingDisplayValue(value);
+            setCurrentListingValue(undefined);
+          }}
+          onBlur={() =>
+            runValidationTasks("listing", currentListingDisplayValue)
+          }
+          errorMessage={errors.listing?.errorMessage}
+          hasError={errors.listing?.hasError}
+          ref={listingRef}
+          labelHidden={true}
+          {...getOverrideProps(overrides, "listing")}
+        ></Autocomplete>
+      </ArrayField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}

@@ -254,8 +254,8 @@ export default function ListingCreateForm(props) {
       : getIDValue.updates?.(updates)
   );
   const getDisplayValue = {
-    recruiter: (r) => `${r?.listingId ? r?.listingId + " - " : ""}${r?.id}`,
-    updates: (r) => `${r?.noteId ? r?.noteId + " - " : ""}${r?.id}`,
+    recruiter: (r) => `${r?.listingId}${r?.email}`,
+    updates: (r) => `${r?.notes ? r?.notes + " - " : ""}${r?.id}`,
   };
   const validations = {
     company: [{ type: "Required" }],
@@ -292,7 +292,10 @@ export default function ListingCreateForm(props) {
       const variables = {
         limit: autocompleteLength * 5,
         filter: {
-          or: [{ listingId: { contains: value } }, { id: { contains: value } }],
+          or: [
+            { listingId: { contains: value } },
+            { email: { contains: value } },
+          ],
         },
       };
       if (newNext) {
@@ -321,7 +324,7 @@ export default function ListingCreateForm(props) {
       const variables = {
         limit: autocompleteLength * 5,
         filter: {
-          or: [{ noteId: { contains: value } }, { id: { contains: value } }],
+          or: [{ notes: { contains: value } }, { id: { contains: value } }],
         },
       };
       if (newNext) {
@@ -405,7 +408,7 @@ export default function ListingCreateForm(props) {
             title: modelFields.title,
             source: modelFields.source,
             link: modelFields.link,
-            listingRecruiterId: modelFields?.recruiter?.id,
+            recruiterId: modelFields?.recruiter?.id,
             status: modelFields.status,
             notes: modelFields.notes,
           };
@@ -428,7 +431,6 @@ export default function ListingCreateForm(props) {
                   variables: {
                     input: {
                       id: original.id,
-                      id: listing.id,
                     },
                   },
                 })
@@ -454,7 +456,12 @@ export default function ListingCreateForm(props) {
       {...rest}
     >
       <TextField
-        label="Company"
+        label={
+          <span style={{ display: "inline-flex" }}>
+            <span>Company</span>
+            <span style={{ color: "red" }}>*</span>
+          </span>
+        }
         isRequired={true}
         isReadOnly={false}
         value={company}
@@ -485,7 +492,12 @@ export default function ListingCreateForm(props) {
         {...getOverrideProps(overrides, "company")}
       ></TextField>
       <TextField
-        label="Title"
+        label={
+          <span style={{ display: "inline-flex" }}>
+            <span>Title</span>
+            <span style={{ color: "red" }}>*</span>
+          </span>
+        }
         isRequired={true}
         isReadOnly={false}
         value={title}
@@ -770,12 +782,10 @@ export default function ListingCreateForm(props) {
           isReadOnly={false}
           placeholder="Search Update"
           value={currentUpdatesDisplayValue}
-          options={updatesRecords
-            .filter((r) => !updatesIdSet.has(getIDValue.updates?.(r)))
-            .map((r) => ({
-              id: getIDValue.updates?.(r),
-              label: getDisplayValue.updates?.(r),
-            }))}
+          options={updatesRecords.map((r) => ({
+            id: getIDValue.updates?.(r),
+            label: getDisplayValue.updates?.(r),
+          }))}
           isLoading={updatesLoading}
           onSelect={({ id, label }) => {
             setCurrentUpdatesValue(

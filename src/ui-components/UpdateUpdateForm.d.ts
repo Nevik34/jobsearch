@@ -5,7 +5,7 @@
  **************************************************************************/
 
 import * as React from "react";
-import { GridProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { AutocompleteProps, GridProps, TextFieldProps } from "@aws-amplify/ui-react";
 export declare type EscapeHatchProps = {
     [elementHierarchy: string]: Record<string, unknown>;
 } | null;
@@ -22,21 +22,18 @@ export declare type ValidationResponse = {
 };
 export declare type ValidationFunction<T> = (value: T, validationResponse: ValidationResponse) => ValidationResponse | Promise<ValidationResponse>;
 export declare type UpdateUpdateFormInputValues = {
-    noteId?: string;
-    date?: string;
     notes?: string;
+    listing?: any;
 };
 export declare type UpdateUpdateFormValidationValues = {
-    noteId?: ValidationFunction<string>;
-    date?: ValidationFunction<string>;
     notes?: ValidationFunction<string>;
+    listing?: ValidationFunction<any>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type UpdateUpdateFormOverridesProps = {
     UpdateUpdateFormGrid?: PrimitiveOverrideProps<GridProps>;
-    noteId?: PrimitiveOverrideProps<TextFieldProps>;
-    date?: PrimitiveOverrideProps<TextFieldProps>;
     notes?: PrimitiveOverrideProps<TextFieldProps>;
+    listing?: PrimitiveOverrideProps<AutocompleteProps>;
 } & EscapeHatchProps;
 export declare type UpdateUpdateFormProps = React.PropsWithChildren<{
     overrides?: UpdateUpdateFormOverridesProps | undefined | null;

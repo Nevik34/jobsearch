@@ -44,9 +44,21 @@ export const onCreateUpdate = /* GraphQL */ `
   subscription OnCreateUpdate($filter: ModelSubscriptionUpdateFilterInput) {
     onCreateUpdate(filter: $filter) {
       id
-      noteId
-      date
+      listingId
       notes
+      listing {
+        id
+        company
+        title
+        source
+        link
+        recruiterId
+        status
+        notes
+        createdAt
+        updatedAt
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -57,9 +69,21 @@ export const onUpdateUpdate = /* GraphQL */ `
   subscription OnUpdateUpdate($filter: ModelSubscriptionUpdateFilterInput) {
     onUpdateUpdate(filter: $filter) {
       id
-      noteId
-      date
+      listingId
       notes
+      listing {
+        id
+        company
+        title
+        source
+        link
+        recruiterId
+        status
+        notes
+        createdAt
+        updatedAt
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -70,9 +94,21 @@ export const onDeleteUpdate = /* GraphQL */ `
   subscription OnDeleteUpdate($filter: ModelSubscriptionUpdateFilterInput) {
     onDeleteUpdate(filter: $filter) {
       id
-      noteId
-      date
+      listingId
       notes
+      listing {
+        id
+        company
+        title
+        source
+        link
+        recruiterId
+        status
+        notes
+        createdAt
+        updatedAt
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -87,9 +123,9 @@ export const onCreateListing = /* GraphQL */ `
       title
       source
       link
+      recruiterId
       recruiter {
         id
-        listingId
         first
         last
         email
@@ -106,7 +142,6 @@ export const onCreateListing = /* GraphQL */ `
       }
       createdAt
       updatedAt
-      listingRecruiterId
       __typename
     }
   }
@@ -119,9 +154,9 @@ export const onUpdateListing = /* GraphQL */ `
       title
       source
       link
+      recruiterId
       recruiter {
         id
-        listingId
         first
         last
         email
@@ -138,7 +173,6 @@ export const onUpdateListing = /* GraphQL */ `
       }
       createdAt
       updatedAt
-      listingRecruiterId
       __typename
     }
   }
@@ -151,9 +185,9 @@ export const onDeleteListing = /* GraphQL */ `
       title
       source
       link
+      recruiterId
       recruiter {
         id
-        listingId
         first
         last
         email
@@ -170,7 +204,6 @@ export const onDeleteListing = /* GraphQL */ `
       }
       createdAt
       updatedAt
-      listingRecruiterId
       __typename
     }
   }
@@ -181,7 +214,10 @@ export const onCreateRecruiter = /* GraphQL */ `
   ) {
     onCreateRecruiter(filter: $filter) {
       id
-      listingId
+      referrals {
+        nextToken
+        __typename
+      }
       first
       last
       email
@@ -198,7 +234,10 @@ export const onUpdateRecruiter = /* GraphQL */ `
   ) {
     onUpdateRecruiter(filter: $filter) {
       id
-      listingId
+      referrals {
+        nextToken
+        __typename
+      }
       first
       last
       email
@@ -215,7 +254,10 @@ export const onDeleteRecruiter = /* GraphQL */ `
   ) {
     onDeleteRecruiter(filter: $filter) {
       id
-      listingId
+      referrals {
+        nextToken
+        __typename
+      }
       first
       last
       email

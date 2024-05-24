@@ -12,9 +12,9 @@ type Note @model @auth(rules: [{ allow: public }]) {
 
 type Update @model {
   id: ID!
-  noteId: String!
-  date: String!
-  notes: String
+  listingId: ID! @index(name: "byListing")
+  notes: String!
+  listing: Listing @belongsTo(fields: ["listingId"])
 }
 
 type Listing @model {
@@ -23,15 +23,16 @@ type Listing @model {
   title: String!
   source: String
   link: String
-  recruiter: Recruiter @hasOne
+  recruiterId: ID @index(name: "byRecruiter")
+  recruiter: Recruiter @belongsTo(fields: ["recruiterId"])
   status: String
   notes: String
-  updates: [Update] @hasMany(fields: ["id"])
+  updates: [Update] @hasMany(indexName: "byListing", fields: ["id"])
 }
 
 type Recruiter @model {
   id: ID!
-  listings: [Listing] @hasMany
+  referrals: [Listing] @hasMany(indexName: "byRecruiter", fields: ["id"])
   first: String!
   last: String!
   email: String!

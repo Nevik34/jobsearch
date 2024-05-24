@@ -56,9 +56,21 @@ export const createUpdate = /* GraphQL */ `
   ) {
     createUpdate(input: $input, condition: $condition) {
       id
-      noteId
-      date
+      listingId
       notes
+      listing {
+        id
+        company
+        title
+        source
+        link
+        recruiterId
+        status
+        notes
+        createdAt
+        updatedAt
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -72,9 +84,21 @@ export const updateUpdate = /* GraphQL */ `
   ) {
     updateUpdate(input: $input, condition: $condition) {
       id
-      noteId
-      date
+      listingId
       notes
+      listing {
+        id
+        company
+        title
+        source
+        link
+        recruiterId
+        status
+        notes
+        createdAt
+        updatedAt
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -88,9 +112,21 @@ export const deleteUpdate = /* GraphQL */ `
   ) {
     deleteUpdate(input: $input, condition: $condition) {
       id
-      noteId
-      date
+      listingId
       notes
+      listing {
+        id
+        company
+        title
+        source
+        link
+        recruiterId
+        status
+        notes
+        createdAt
+        updatedAt
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -108,9 +144,9 @@ export const createListing = /* GraphQL */ `
       title
       source
       link
+      recruiterId
       recruiter {
         id
-        listingId
         first
         last
         email
@@ -127,7 +163,6 @@ export const createListing = /* GraphQL */ `
       }
       createdAt
       updatedAt
-      listingRecruiterId
       __typename
     }
   }
@@ -143,9 +178,9 @@ export const updateListing = /* GraphQL */ `
       title
       source
       link
+      recruiterId
       recruiter {
         id
-        listingId
         first
         last
         email
@@ -162,7 +197,6 @@ export const updateListing = /* GraphQL */ `
       }
       createdAt
       updatedAt
-      listingRecruiterId
       __typename
     }
   }
@@ -178,9 +212,9 @@ export const deleteListing = /* GraphQL */ `
       title
       source
       link
+      recruiterId
       recruiter {
         id
-        listingId
         first
         last
         email
@@ -197,7 +231,6 @@ export const deleteListing = /* GraphQL */ `
       }
       createdAt
       updatedAt
-      listingRecruiterId
       __typename
     }
   }
@@ -209,7 +242,10 @@ export const createRecruiter = /* GraphQL */ `
   ) {
     createRecruiter(input: $input, condition: $condition) {
       id
-      listingId
+      referrals {
+        nextToken
+        __typename
+      }
       first
       last
       email
@@ -227,7 +263,10 @@ export const updateRecruiter = /* GraphQL */ `
   ) {
     updateRecruiter(input: $input, condition: $condition) {
       id
-      listingId
+      referrals {
+        nextToken
+        __typename
+      }
       first
       last
       email
@@ -245,7 +284,10 @@ export const deleteRecruiter = /* GraphQL */ `
   ) {
     deleteRecruiter(input: $input, condition: $condition) {
       id
-      listingId
+      referrals {
+        nextToken
+        __typename
+      }
       first
       last
       email
