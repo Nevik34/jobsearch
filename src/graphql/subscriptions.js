@@ -55,6 +55,7 @@ export const onCreateUpdate = /* GraphQL */ `
         recruiterId
         status
         notes
+        updateIds
         createdAt
         updatedAt
         __typename
@@ -80,6 +81,7 @@ export const onUpdateUpdate = /* GraphQL */ `
         recruiterId
         status
         notes
+        updateIds
         createdAt
         updatedAt
         __typename
@@ -105,6 +107,7 @@ export const onDeleteUpdate = /* GraphQL */ `
         recruiterId
         status
         notes
+        updateIds
         createdAt
         updatedAt
         __typename
@@ -140,6 +143,7 @@ export const onCreateListing = /* GraphQL */ `
         nextToken
         __typename
       }
+      updateIds
       createdAt
       updatedAt
       __typename
@@ -171,6 +175,7 @@ export const onUpdateListing = /* GraphQL */ `
         nextToken
         __typename
       }
+      updateIds
       createdAt
       updatedAt
       __typename
@@ -202,6 +207,7 @@ export const onDeleteListing = /* GraphQL */ `
         nextToken
         __typename
       }
+      updateIds
       createdAt
       updatedAt
       __typename

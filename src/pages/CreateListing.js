@@ -1,30 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import {
+  Autocomplete,
   Button,
   Flex,
   Heading,
   SelectField,
-  Text,
   TextField,
   View,
 } from '@aws-amplify/ui-react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { generateClient } from 'aws-amplify/api';
 
 import { createListing as createListingMutation } from '../graphql/mutations';
+import { listRecruiters as listRecruitersQuery } from '../graphql/queries';
 import { LISTING_STATUS, SOURCES } from './Constants';
 
 export default function CreateListing() {
   const navigate = useNavigate();
-  const params = useParams();
   const client = generateClient();
   const [listing, setListing] = useState({});
+  const [recruiters, setRecruiters] = useState([]);
+  const [autoSelection, setAutoSelection] = useState({});
 
   const handleChange = (event) => {
     const { target } = event;
     setListing((prevState) => ({
       ...prevState,
-      [target.name]: target.value,
+      [target.name]: target.value.id || target.value,
     }));
   };
 
@@ -39,7 +41,10 @@ export default function CreateListing() {
         link: form.get('link'),
         status: LISTING_STATUS.ACTIVE,
         notes: form.get('notes'),
+        recruiterId: autoSelection?.id || null,
       };
+
+      // console.log('form data: ', data);
 
       await client.graphql({
         query: createListingMutation,
@@ -52,8 +57,32 @@ export default function CreateListing() {
     }
   }
 
-  console.log('SOURCES: ', SOURCES);
-  useEffect(() => {}, []);
+  async function fetchRecruiters() {
+    try {
+      const apiData = await client.graphql({
+        query: listRecruitersQuery,
+      });
+      const recruitersFromApi = apiData.data.listRecruiters.items;
+      const mapped = recruitersFromApi.map((recruiter) => {
+        return {
+          id: recruiter.id,
+          label:
+            recruiter.first + ' ' + recruiter.last + ' - ' + recruiter.company,
+        };
+      });
+      setRecruiters(mapped);
+    } catch (e) {
+      console.log('Error listing updates: ', e);
+    }
+  }
+
+  function recruiterSelected(e) {
+    setAutoSelection(e || {});
+  }
+
+  useEffect(() => {
+    fetchRecruiters();
+  }, []);
 
   return (
     <View className="Listing">
@@ -105,6 +134,14 @@ export default function CreateListing() {
             value={listing.notes}
             label="Notes"
             onChange={handleChange}
+          />
+          <Autocomplete
+            name="recruiter"
+            placeholder="Active Recruiters..."
+            options={recruiters}
+            onSelect={recruiterSelected}
+            onChange={recruiterSelected}
+            onClear={recruiterSelected}
           />
           <Button type="submit" variation="primary">
             Save

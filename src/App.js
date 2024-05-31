@@ -2,21 +2,13 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 import '@aws-amplify/ui-react/styles.css';
 import {
-  Button,
-  Link,
-  Flex,
   Heading,
   useAuthenticator,
   View,
   withAuthenticator,
 } from '@aws-amplify/ui-react';
 
-import {
-  BrowserRouter as Router,
-  Link as ReactRouterLink,
-  Routes,
-  Route,
-} from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 
 import Notes from './pages/Notes';
 import Note from './pages/Note';

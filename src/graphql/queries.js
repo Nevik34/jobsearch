@@ -50,6 +50,7 @@ export const getUpdate = /* GraphQL */ `
         recruiterId
         status
         notes
+        updateIds
         createdAt
         updatedAt
         __typename
@@ -105,6 +106,7 @@ export const getListing = /* GraphQL */ `
         nextToken
         __typename
       }
+      updateIds
       createdAt
       updatedAt
       __typename
@@ -127,6 +129,7 @@ export const listListings = /* GraphQL */ `
         recruiterId
         status
         notes
+        updateIds
         createdAt
         updatedAt
         __typename
@@ -228,6 +231,7 @@ export const listingsByRecruiterId = /* GraphQL */ `
         recruiterId
         status
         notes
+        updateIds
         createdAt
         updatedAt
         __typename

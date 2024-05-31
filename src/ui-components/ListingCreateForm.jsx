@@ -199,6 +199,7 @@ export default function ListingCreateForm(props) {
     status: "",
     notes: "",
     updates: [],
+    updateIds: [],
   };
   const [company, setCompany] = React.useState(initialValues.company);
   const [title, setTitle] = React.useState(initialValues.title);
@@ -212,6 +213,7 @@ export default function ListingCreateForm(props) {
   const [updates, setUpdates] = React.useState(initialValues.updates);
   const [updatesLoading, setUpdatesLoading] = React.useState(false);
   const [updatesRecords, setUpdatesRecords] = React.useState([]);
+  const [updateIds, setUpdateIds] = React.useState(initialValues.updateIds);
   const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
@@ -227,6 +229,8 @@ export default function ListingCreateForm(props) {
     setUpdates(initialValues.updates);
     setCurrentUpdatesValue(undefined);
     setCurrentUpdatesDisplayValue("");
+    setUpdateIds(initialValues.updateIds);
+    setCurrentUpdateIdsValue("");
     setErrors({});
   };
   const [currentRecruiterDisplayValue, setCurrentRecruiterDisplayValue] =
@@ -239,6 +243,8 @@ export default function ListingCreateForm(props) {
   const [currentUpdatesValue, setCurrentUpdatesValue] =
     React.useState(undefined);
   const updatesRef = React.createRef();
+  const [currentUpdateIdsValue, setCurrentUpdateIdsValue] = React.useState("");
+  const updateIdsRef = React.createRef();
   const getIDValue = {
     recruiter: (r) => JSON.stringify({ id: r?.id }),
     updates: (r) => JSON.stringify({ id: r?.id }),
@@ -266,6 +272,7 @@ export default function ListingCreateForm(props) {
     status: [],
     notes: [],
     updates: [],
+    updateIds: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -366,6 +373,7 @@ export default function ListingCreateForm(props) {
           status,
           notes,
           updates,
+          updateIds,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -411,6 +419,7 @@ export default function ListingCreateForm(props) {
             recruiterId: modelFields?.recruiter?.id,
             status: modelFields.status,
             notes: modelFields.notes,
+            updateIds: modelFields.updateIds,
           };
           const listing = (
             await client.graphql({
@@ -477,6 +486,7 @@ export default function ListingCreateForm(props) {
               status,
               notes,
               updates,
+              updateIds,
             };
             const result = onChange(modelFields);
             value = result?.company ?? value;
@@ -513,6 +523,7 @@ export default function ListingCreateForm(props) {
               status,
               notes,
               updates,
+              updateIds,
             };
             const result = onChange(modelFields);
             value = result?.title ?? value;
@@ -544,6 +555,7 @@ export default function ListingCreateForm(props) {
               status,
               notes,
               updates,
+              updateIds,
             };
             const result = onChange(modelFields);
             value = result?.source ?? value;
@@ -575,6 +587,7 @@ export default function ListingCreateForm(props) {
               status,
               notes,
               updates,
+              updateIds,
             };
             const result = onChange(modelFields);
             value = result?.link ?? value;
@@ -603,6 +616,7 @@ export default function ListingCreateForm(props) {
               status,
               notes,
               updates,
+              updateIds,
             };
             const result = onChange(modelFields);
             value = result?.recruiter ?? value;
@@ -692,6 +706,7 @@ export default function ListingCreateForm(props) {
               status: value,
               notes,
               updates,
+              updateIds,
             };
             const result = onChange(modelFields);
             value = result?.status ?? value;
@@ -723,6 +738,7 @@ export default function ListingCreateForm(props) {
               status,
               notes: value,
               updates,
+              updateIds,
             };
             const result = onChange(modelFields);
             value = result?.notes ?? value;
@@ -750,6 +766,7 @@ export default function ListingCreateForm(props) {
               status,
               notes,
               updates: values,
+              updateIds,
             };
             const result = onChange(modelFields);
             values = result?.updates ?? values;
@@ -819,6 +836,59 @@ export default function ListingCreateForm(props) {
           labelHidden={true}
           {...getOverrideProps(overrides, "updates")}
         ></Autocomplete>
+      </ArrayField>
+      <ArrayField
+        onChange={async (items) => {
+          let values = items;
+          if (onChange) {
+            const modelFields = {
+              company,
+              title,
+              source,
+              link,
+              recruiter,
+              status,
+              notes,
+              updates,
+              updateIds: values,
+            };
+            const result = onChange(modelFields);
+            values = result?.updateIds ?? values;
+          }
+          setUpdateIds(values);
+          setCurrentUpdateIdsValue("");
+        }}
+        currentFieldValue={currentUpdateIdsValue}
+        label={"Update ids"}
+        items={updateIds}
+        hasError={errors?.updateIds?.hasError}
+        runValidationTasks={async () =>
+          await runValidationTasks("updateIds", currentUpdateIdsValue)
+        }
+        errorMessage={errors?.updateIds?.errorMessage}
+        setFieldValue={setCurrentUpdateIdsValue}
+        inputFieldRef={updateIdsRef}
+        defaultFieldValue={""}
+      >
+        <TextField
+          label="Update ids"
+          isRequired={false}
+          isReadOnly={false}
+          value={currentUpdateIdsValue}
+          onChange={(e) => {
+            let { value } = e.target;
+            if (errors.updateIds?.hasError) {
+              runValidationTasks("updateIds", value);
+            }
+            setCurrentUpdateIdsValue(value);
+          }}
+          onBlur={() => runValidationTasks("updateIds", currentUpdateIdsValue)}
+          errorMessage={errors.updateIds?.errorMessage}
+          hasError={errors.updateIds?.hasError}
+          ref={updateIdsRef}
+          labelHidden={true}
+          {...getOverrideProps(overrides, "updateIds")}
+        ></TextField>
       </ArrayField>
       <Flex
         justifyContent="space-between"

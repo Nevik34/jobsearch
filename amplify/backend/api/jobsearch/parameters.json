@@ -1,5 +1,6 @@
 {
   "AppSyncApiName": "jobsearch",
   "DynamoDBBillingMode": "PAY_PER_REQUEST",
-  "DynamoDBEnableServerSideEncryption": false
+  "DynamoDBEnableServerSideEncryption": false,
+  "AuthModeLastUpdated": "2024-05-31T19:59:10.089Z"
 }

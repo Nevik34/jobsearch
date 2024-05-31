@@ -16,7 +16,7 @@ import { Link } from 'react-router-dom';
 
 export default function Recruiters() {
   const [recruiters, setRecruiters] = useState([]);
-  const client = generateClient({ authMode: 'apiKey' });
+  const client = generateClient();
 
   async function fetchRecruiters() {
     try {

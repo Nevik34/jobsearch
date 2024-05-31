@@ -1,8 +1,8 @@
 export const LISTING_STATUS = {
-  ACTIVE: 'ACTIVE',
-  INACTIVE: 'INACTIVE',
-  REJECTED: 'REJECTED',
-  ACCEPTED: 'ACCEPTED',
+  ACTIVE: 'Active',
+  INACTIVE: 'Inactive',
+  REJECTED: 'Rejected',
+  ACCEPTED: 'Accepted',
 };
 
 export const SOURCES = {

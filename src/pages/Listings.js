@@ -37,15 +37,6 @@ export default function Listings() {
     }
   }
 
-  // async function deleteListing({ id, name }) {
-  //   const newListings = listings.filter((listing) => listing.id !== id);
-  //   setListings(newListings);
-  //   await client.graphql({
-  //     query: deleteListingMutation,
-  //     variables: { input: { id } },
-  //   });
-  // }
-
   useEffect(() => {
     fetchListings();
   }, []);
@@ -56,40 +47,41 @@ export default function Listings() {
       <Link to={'/listing/create'}>
         <Button>Create Listing</Button>
       </Link>
-      <View margin="3rem 0" display={'flex'} direction="column">
-        <Table variation="striped">
-          <TableHead>
-            <TableRow>
-              <TableCell as="th">Company</TableCell>
-              <TableCell as="th">Title</TableCell>
-              <TableCell as="th">Source</TableCell>
-              <TableCell as="th">Last Update</TableCell>
-              <TableCell as="th"></TableCell> {/*Edit*/}
-              {/* <TableCell as="th"></TableCell> Delete */}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {listings.map((listing) => (
+      {listings.length > 0 && (
+        <View margin="3rem 0" display={'flex'} direction="column">
+          <Table variation="striped">
+            <TableHead>
               <TableRow>
-                <TableCell>{listing.company}</TableCell>
-                <TableCell>
-                  {listing.link ? (
-                    <ExternalLink isExternal href={listing.link}>
-                      {listing.title}
-                    </ExternalLink>
-                  ) : (
-                    listing.title
-                  )}
-                </TableCell>
-                <TableCell>{SOURCES[listing.source]}</TableCell>
-                <TableCell>
-                  {new Date(listing.updatedAt).toDateString()}
-                </TableCell>
-                <TableCell width={'100px'}>
-                  <Link to={`/listing/${listing.id}`}>Edit</Link>
-                </TableCell>
-                {/* no good reason to delete listings */}
-                {/* <TableCell width={'100px'}>
+                <TableCell as="th">Company</TableCell>
+                <TableCell as="th">Title</TableCell>
+                <TableCell as="th">Source</TableCell>
+                <TableCell as="th">Last Update</TableCell>
+                <TableCell as="th"></TableCell> {/*Edit*/}
+                {/* <TableCell as="th"></TableCell> Delete */}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {listings.map((listing) => (
+                <TableRow>
+                  <TableCell>{listing.company}</TableCell>
+                  <TableCell>
+                    {listing.link ? (
+                      <ExternalLink isExternal href={listing.link}>
+                        {listing.title}
+                      </ExternalLink>
+                    ) : (
+                      listing.title
+                    )}
+                  </TableCell>
+                  <TableCell>{SOURCES[listing.source]}</TableCell>
+                  <TableCell>
+                    {new Date(listing.updatedAt).toDateString()}
+                  </TableCell>
+                  <TableCell width={'100px'}>
+                    <Link to={`/listing/${listing.id}`}>Edit</Link>
+                  </TableCell>
+                  {/* no good reason to delete listings */}
+                  {/* <TableCell width={'100px'}>
                   <Button
                     variation="link"
                     onClick={() => deleteListing(listing)}
@@ -97,11 +89,12 @@ export default function Listings() {
                     Delete
                   </Button>
                 </TableCell> */}
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </View>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </View>
+      )}
     </View>
   );
 }

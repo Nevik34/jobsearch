@@ -30,6 +30,7 @@ export declare type ListingCreateFormInputValues = {
     status?: string;
     notes?: string;
     updates?: any[];
+    updateIds?: string[];
 };
 export declare type ListingCreateFormValidationValues = {
     company?: ValidationFunction<string>;
@@ -40,6 +41,7 @@ export declare type ListingCreateFormValidationValues = {
     status?: ValidationFunction<string>;
     notes?: ValidationFunction<string>;
     updates?: ValidationFunction<any>;
+    updateIds?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type ListingCreateFormOverridesProps = {
@@ -52,6 +54,7 @@ export declare type ListingCreateFormOverridesProps = {
     status?: PrimitiveOverrideProps<TextFieldProps>;
     notes?: PrimitiveOverrideProps<TextFieldProps>;
     updates?: PrimitiveOverrideProps<AutocompleteProps>;
+    updateIds?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type ListingCreateFormProps = React.PropsWithChildren<{
     overrides?: ListingCreateFormOverridesProps | undefined | null;
